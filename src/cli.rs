@@ -1,12 +1,11 @@
 use std::io::{self, Read};
 
 use atty::Stream;
-use clap::AppSettings::ColoredHelp;
 use clap::ArgSettings::AllowHyphenValues;
-use clap::{crate_authors, crate_name, crate_version, Clap};
+use clap::{crate_authors, crate_name, crate_version, Parser};
 
-#[derive(Debug, Clap)]
-#[clap(version = crate_version!(), author = crate_authors!(), global_setting(ColoredHelp))]
+#[derive(Debug, Parser)]
+#[clap(version = crate_version!(), author = crate_authors!())]
 pub struct Args {
     /// Output the morse code as "dit" and "daw" rather than symbols.
     #[clap(long = "spoken", short = 's')]
@@ -30,11 +29,11 @@ impl Args {
                 .read_to_string(&mut stdin_args)
                 .expect("failed to read arguments from STDIN");
 
-            <Args as Clap>::parse_from(
+            <Args as Parser>::parse_from(
                 format!("{} {}", crate_name!(), stdin_args).split_ascii_whitespace(),
             )
         } else {
-            <Args as Clap>::parse()
+            <Args as Parser>::parse()
         }
     }
 }
